@@ -1,46 +1,59 @@
 const loop = async () => {
-    previousTime = performance.now();
-    while (true) {
-      if (!pause) {
-        currentTime = performance.now();
-        if(realtime){
-            interval = currentTime - previousTime;
-        }
+  previousTime = performance.now();
+  while (true) {
+    if (!pause) {
+      currentTime = performance.now();
+      if (realtime) {
+        interval = currentTime - previousTime;
+      }
 
-        let energy = 0;
-  
-        for (let i = 0; i < physicsObjects.length; i++) {
-          updateVariables(i);
-        }
+      // let energy = 0;
 
-        await checkCollision();
-  
-        for (obj in physicsObjects) {
-          obj = physicsObjects[obj];
+      for (let i = 0; i < physicsObjects.length; i++) {
+        updateVariables(i);
+      }
+
+      await checkCollision();
+
+      for (obj in physicsObjects) {
+        obj = physicsObjects[obj];
+        if (obj.enabled) {
           obj.element.style.left = obj.x + "px";
           obj.element.style.bottom = obj.y + "px";
           let properties = obj.element.firstElementChild.children;
-          let update = [
-            Math.round(obj.xSpd * 100) / 100,
-            Math.round(obj.ySpd * 100) / 100,
-            Math.round(obj.x) / 100,
-            Math.round(obj.y) / 100,
-          ];
-  
+          let update = []
+          if (cm) {
+            update = [
+              Math.round(obj.xSpd * 100) / 100,
+              Math.round(obj.ySpd * 100) / 100,
+              Math.round(obj.x) / 100,
+              Math.round(obj.y) / 100,
+            ];
+          } else {
+            {
+              update = [
+                Math.round(obj.xSpd * 100) / 100,
+                Math.round(obj.ySpd * 100) / 100,
+                Math.round(obj.x) / 10,
+                Math.round(obj.y) / 10,
+              ];
+            }
+          }
+
           update[0] += "m/s";
           update[1] += "m/s";
           update[2] += "m";
           update[3] += "m";
-  
+
           for (let i = 0; i < properties.length; i++) {
             properties[i].lastElementChild.innerHTML = update[i];
           }
-  
-          energy += Math.abs((obj.y / 100) * gravity * obj.mass);
-          energy += Math.abs(
-            (obj.mass * (Math.pow(obj.xSpd, 2) + Math.pow(obj.ySpd, 2))) / 2
-          );
-  
+
+          // energy += Math.abs((obj.y / 100) * gravity * obj.mass);
+          // energy += Math.abs(
+          //   (obj.mass * (Math.pow(obj.xSpd, 2) + Math.pow(obj.ySpd, 2))) / 2
+          // );
+
           if (document.getElementById(obj.x + 15 + "," + (obj.y + 15)) == null) {
             let temp = document.createElement("div");
             temp.className = "dot " + obj.element.id;
@@ -49,21 +62,21 @@ const loop = async () => {
             temp.id = obj.x + 15 + "," + (obj.y + 15);
             document.getElementById("dots").appendChild(temp);
           }
-  
+
           let dots = document.getElementsByClassName(obj.element.id);
           if (dots.length > 1) {
             let point1X = dots[dots.length - 2].style.left;
             point1X = parseInt(point1X.substring(0, point1X.length - 2));
-  
+
             let point2X = dots[dots.length - 1].style.left;
             point2X = parseInt(point2X.substring(0, point2X.length - 2));
-  
+
             let point1Y = dots[dots.length - 2].style.bottom;
             point1Y = parseInt(point1Y.substring(0, point1Y.length - 2));
-  
+
             let point2Y = dots[dots.length - 1].style.bottom;
             point2Y = parseInt(point2Y.substring(0, point2Y.length - 2));
-  
+
             if (
               document.getElementById(
                 point1X + "," + point2X + "|" + point1Y + "," + point2Y
@@ -73,13 +86,14 @@ const loop = async () => {
                 "http://www.w3.org/2000/svg",
                 "svg"
               );
-  
+
               let height = Math.abs(point1Y - point2Y);
               let width = Math.abs(point2X - point1X);
               if (height == 0) height++;
               if (width == 0) width++;
               line.setAttribute("width", width);
               line.setAttribute("height", height);
+              line.setAttribute("stroke", obj.element.id);
               line.style.left = point1X + "px";
               line.style.bottom = point1Y + "px";
               line.classList.add("line");
@@ -97,10 +111,10 @@ const loop = async () => {
               inner.setAttribute("y1", 0);
               inner.setAttribute("x2", Math.abs(point2X - point1X));
               inner.setAttribute("y2", Math.abs(point1Y - point2Y));
-              inner.setAttribute("stroke", "black");
+              // inner.setAttribute("stroke", "black");
               line.appendChild(inner);
               document.getElementById("lines").appendChild(line);
-              if (document.getElementById("lines").childElementCount > 25) {
+              if (document.getElementById("lines").childElementCount > 100 && !infiniteTrails) {
                 document
                   .getElementById("lines")
                   .removeChild(document.getElementsByClassName("line")[0]);
@@ -108,39 +122,47 @@ const loop = async () => {
             }
           }
         }
-  
-        if (document.getElementById("dots").childElementCount > 25) {
-          document
-            .getElementById("dots")
-            .removeChild(document.getElementsByClassName("dot")[0]);
-        }
-  
-        energyLost = maxEnergy - energy;
-  
-        document.getElementById("timer").innerHTML =
-          Math.floor(timer * 100) / 100 + "s";
-        document.getElementById("total").innerHTML =
-          Math.floor(maxEnergy * 100) / 100 + "J";
-        document.getElementById("lost").innerHTML =
-          Math.floor(energyLost * 100) / 100 + "J";
-        document.getElementById("current").innerHTML =
-          Math.floor(energy * 100) / 100 + "J";
-        previousTime = currentTime;
-        await new Promise((r) => setTimeout(r, refreshInterval));
-        timer += interval / 1000;
-      } else {
-        await new Promise((r) => setTimeout(r, 1000));
-        previousTime = performance.now();
       }
-    }
-  };
-  
-  const stop = () => {
-    if (pause) {
-      document.getElementById("status").innerText = "RUNNING";
-      pause = false;
+
+      if (document.getElementById("dots").childElementCount > 100) {
+        document
+          .getElementById("dots")
+          .removeChild(document.getElementsByClassName("dot")[0]);
+      }
+
+      // energyLost = maxEnergy - energy;
+
+      document.getElementById("timer").innerHTML =
+        Math.floor(timer * 100) / 100 + "s";
+      // document.getElementById("total").innerHTML =
+      //   Math.floor(maxEnergy * 100) / 100 + "J";
+      // document.getElementById("lost").innerHTML =
+      //   Math.floor(energyLost * 100) / 100 + "J";
+      // document.getElementById("current").innerHTML =
+      //   Math.floor(energy * 100) / 100 + "J";
+      previousTime = currentTime;
+      if (cm) {
+        document.getElementById("windowWidth").innerHTML = window.innerWidth + " ";
+        document.getElementById("windowHeight").innerHTML = window.innerHeight + " ";
+      } else {
+        document.getElementById("windowWidth").innerHTML = window.innerWidth / 10 + " ";
+        document.getElementById("windowHeight").innerHTML = window.innerHeight / 10 + " ";
+      }
+      await new Promise((r) => setTimeout(r, refreshInterval));
+      timer += interval / 1000;
     } else {
-      pause = true;
-      document.getElementById("status").innerText = "PAUSED";
+      await new Promise((r) => setTimeout(r, 1000));
+      previousTime = performance.now();
     }
-  };
+  }
+};
+
+const stop = () => {
+  if (pause) {
+    document.getElementById("status").innerText = "RUNNING";
+    pause = false;
+  } else {
+    pause = true;
+    document.getElementById("status").innerText = "PAUSED";
+  }
+};

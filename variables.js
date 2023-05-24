@@ -4,7 +4,7 @@ let pause = false;
 let refreshInterval = 1;
 let previousTime = 0;
 let currentTime = 0;
-let realtime = false;
+let realtime = true;
 let interval = 1;
 let elastic = false;
 let elasticity = 0.75;
@@ -15,7 +15,9 @@ let ceiling = true;
 let timer = 0;
 let maxEnergy = 0;
 let energyLost = 0;
+let cm = false;
 let realStart = performance.now();
+let infiniteTrails = false;
 
 let lined = true;
 
@@ -27,6 +29,7 @@ const edit = (index) => {
     document.getElementById("force").value = obj.force;
     document.getElementById("angle").value = obj.angle;
     document.getElementById("mass").value = obj.mass;
+    document.getElementById("enabled").checked = obj.enabled;
     document.getElementById("edit").style.visibility = "visible";
 };
 
@@ -42,4 +45,5 @@ const submit = () => {
     obj.element.style.width = obj.radius + "px";
     obj.element.style.height = obj.radius + "px";
     obj.element.lastElementChild.innerHTML = obj.mass + "kg";
+    obj.enabled = document.getElementById("enabled").checked;
 };

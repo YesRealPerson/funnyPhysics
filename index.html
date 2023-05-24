@@ -18,18 +18,30 @@
     <button id="reset" onclick="reset()">RESET</button>
   </div>
   <div id="status">RUNNING</div>
+  <div id="notice">
+    EACH BOX IS <span id="size">2 </span><span class="unit">METERS</span>
+    <br>
+    <span id="key">(EVERY 10 PIXELS IS 1 M)</span>
+    <br>
+    WIDTH: <span id="windowWidth"></span><span class="unit">METERS</span>
+    <br>
+    HEIGHT: <span id="windowHeight"></span><span class="unit">METERS</span>
+  </div>
+  <div id="grid"></div>
   <div id="stats">
     TIMER
     <div id="timer">0</div>
-    TOTAL ENERGY
+    <!-- TOTAL ENERGY
     <div id="total"></div>
     ENERGY LOST
     <div id="lost"></div>
     CURRENT ENERGY
-    <div id="current"></div>
+    <div id="current"></div> -->
   </div>
 
   <div id="edit" style="visibility: hidden">
+    ENABLED
+    <input id="enabled" type="checkbox" autocomplete="off" />
     FORCE
     <input id="force" type="number" autocomplete="off" />
     TIME
@@ -46,18 +58,24 @@
     <input id="FRICTION" type="checkbox" autocomplete="off" />
     REALTIME
     <input id="REALTIME" type="checkbox" autocomplete="off" />
+    MEASURED IN CM
+    <input id="CM" type="checkbox" autocomplete="off" />
     CEILING
     <input id="CEILING" type="checkbox" autocomplete="off" />
+    INFINITE TRAILS (THIS WILL CAUSE SLOWDOWNS)
+    <input id="INFTRAILS" type="checkbox" autocomplete="off" />
     COEFFICIENT OF FRICTION
     <input id="COEFFICIENT" type="number" autocomplete="off" />
     GRAVITY
     <input id="GRAVITY" type="number" autocomplete="off" />
     INTERVAL
     <input id="INTERVAL" type="number" autocomplete="off" />
+    <!-- ELASTICITY (applies to all objects and surfaces)
+    <input id="ELASTICITY" type="number" autocomplete="off" /> -->
     <button onclick="settingSubmit()">SUBMIT</button>
   </div>
 
-  <div id="one" onclick="edit(0)" class="physics block" style="left: 0px; bottom: 0px">
+  <div id="blue" onclick="edit(0)" class="physics block" style="left: 0px; bottom: 0px">
     <div>
       <div><span>V<sub>x</sub>: </span><span></span></div>
       <div><span>Y<sub>y</sub>: </span><span></span></div>
@@ -66,7 +84,7 @@
     </div>
     <div>5kg</div>
   </div>
-  <div id="two" onclick="edit(1)" class="physics block" style="left: 0px; bottom: 0px">
+  <div id="red" onclick="edit(1)" class="physics block" style="left: 0px; bottom: 0px">
     <div>
       <div><span>V<sub>x</sub>: </span><span></span></div>
       <div><span>Y<sub>y</sub>: </span><span></span></div>
@@ -75,7 +93,7 @@
     </div>
     <div>5kg</div>
   </div>
-  <div id="three" onclick="edit(2)" class="physics block" style="left: 0px; bottom: 0px">
+  <div id="green" onclick="edit(2)" class="physics block" style="left: 0px; bottom: 0px">
     <div>
       <div><span>V<sub>x</sub>: </span><span></span></div>
       <div><span>Y<sub>y</sub>: </span><span></span></div>
@@ -91,7 +109,7 @@
 </body>
 <script>
   physicsObjects.push({
-    element: document.getElementById("one"),
+    element: document.getElementById("blue"),
     x: 1000,
     xSpd: 0,
     y: 0,
@@ -100,10 +118,11 @@
     force: 0,
     angle: 0,
     time: 0,
-    radius: 31.051007172331,
+    radius: 50 / (1 + (50 * Math.pow(Math.E, (-0.15 * 5)))) + 29.02,
+    enabled: true
   });
   physicsObjects.push({
-    element: document.getElementById("two"),
+    element: document.getElementById("red"),
     x: 100,
     xSpd: 0,
     y: 0,
@@ -112,10 +131,11 @@
     force: 0,
     angle: 0,
     time: 0,
-    radius: 31.051007172331,
+    radius: 50 / (1 + (50 * Math.pow(Math.E, (-0.15 * 5)))) + 29.02,
+    enabled: true
   });
   physicsObjects.push({
-    element: document.getElementById("three"),
+    element: document.getElementById("green"),
     x: 150,
     xSpd: 0,
     y: 0,
@@ -124,7 +144,8 @@
     force: 0,
     angle: 0,
     time: 0,
-    radius: 31.051007172331,
+    radius: 50 / (1 + (50 * Math.pow(Math.E, (-0.15 * 5)))) + 29.02,
+    enabled: true
   });
   let settingPanel = document.getElementById("setting");
   loop();
