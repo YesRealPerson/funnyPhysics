@@ -1,3 +1,7 @@
+body * {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
 .physics{
     position:fixed;
     width:30px;
@@ -32,19 +36,27 @@ body{
 
 #stats{
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0vh;
+    left: 10vw;
     display: flex;
     flex-direction: column;
 }
 
-#pause{
+#buttons{
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    top: 0vh;
+    left: 0vw;
+}
+
+#buttons > *:hover{
+    background-color: grey;
+}
+#buttons > * {
     background-color: white;
     border: 1px solid black;
-    font-size: 50px;
-    position: fixed;
-    top: 10vh;
-    left: 5vw;
+    font-size: 2vw;
 }
 
 #one{
@@ -85,7 +97,7 @@ body{
     color: white;
 }
 
-#edit {
+#edit, #setting {
     color: white;
     position: fixed;
     width: 100%;

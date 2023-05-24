@@ -1,120 +1,133 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    <link rel="stylesheet" href="./style.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="./main.js"></script>
-  </head>
-  <body>
-    <button id="pause" onclick="stop()">PAUSE</button>
-    <div id="status">RUNNING</div>
-    <div id="stats">
-      TIMER
-      <div id="timer">0</div>
-      TOTAL ENERGY
-      <div id="total"></div>
-      ENERGY LOST
-      <div id="lost"></div>
-      CURRENT ENERGY
-      <div id="current"></div>
-    </div>
 
-    <div id="edit" style="visibility: hidden">
-      FORCE
-      <input id="force" type="number" autocomplete="off" />
-      TIME
-      <input id="time" type="number" autocomplete="off" />
-      ANGLE
-      <input id="angle" type="number" autocomplete="off" />
-      MASS
-      <input id="mass" type="number" autocomplete="off" />
-      <button onclick="submit()">SUBMIT</button>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <link rel="stylesheet" href="./style.css" />
+  <script src="./variables.js"></script>
+  <script src="./move.js"></script>
+  <script src="./colision.js"></script>
+  <script src="./loop.js"></script>
+  <script src="settingsedit.js"></script>
+</head>
+
+<body>
+  <div id="buttons">
+    <button id="pause" onclick="stop()">PAUSE</button>
+    <button id="settings" onclick="settings()">SETTINGS</button>
+    <button id="reset" onclick="reset()">RESET</button>
+  </div>
+  <div id="status">RUNNING</div>
+  <div id="stats">
+    TIMER
+    <div id="timer">0</div>
+    TOTAL ENERGY
+    <div id="total"></div>
+    ENERGY LOST
+    <div id="lost"></div>
+    CURRENT ENERGY
+    <div id="current"></div>
+  </div>
+
+  <div id="edit" style="visibility: hidden">
+    FORCE
+    <input id="force" type="number" autocomplete="off" />
+    TIME
+    <input id="time" type="number" autocomplete="off" />
+    ANGLE
+    <input id="angle" type="number" autocomplete="off" />
+    MASS
+    <input id="mass" type="number" autocomplete="off" />
+    <button onclick="submit()">SUBMIT</button>
+  </div>
+
+  <div id="setting" style="visibility: hidden">
+    FRICTION
+    <input id="FRICTION" type="checkbox" autocomplete="off" />
+    REALTIME
+    <input id="REALTIME" type="checkbox" autocomplete="off" />
+    CEILING
+    <input id="CEILING" type="checkbox" autocomplete="off" />
+    COEFFICIENT OF FRICTION
+    <input id="COEFFICIENT" type="number" autocomplete="off" />
+    GRAVITY
+    <input id="GRAVITY" type="number" autocomplete="off" />
+    INTERVAL
+    <input id="INTERVAL" type="number" autocomplete="off" />
+    <button onclick="settingSubmit()">SUBMIT</button>
+  </div>
+
+  <div id="one" onclick="edit(0)" class="physics block" style="left: 0px; bottom: 0px">
+    <div>
+      <div><span>V<sub>x</sub>: </span><span></span></div>
+      <div><span>Y<sub>y</sub>: </span><span></span></div>
+      <div><span>X: </span><span></span></div>
+      <div><span>Y: </span><span></span></div>
     </div>
-    <div
-      id="one"
-      onclick="edit(0)"
-      class="physics block"
-      style="left: 0px; bottom: 0px"
-    >
-      <div>
-        <div><span>V<sub>x</sub>: </span><span></span></div>
-        <div><span>Y<sub>y</sub>: </span><span></span></div>
-        <div><span>X: </span><span></span></div>
-        <div><span>Y: </span><span></span></div>
-      </div>
-      <div>5kg</div>
+    <div>5kg</div>
+  </div>
+  <div id="two" onclick="edit(1)" class="physics block" style="left: 0px; bottom: 0px">
+    <div>
+      <div><span>V<sub>x</sub>: </span><span></span></div>
+      <div><span>Y<sub>y</sub>: </span><span></span></div>
+      <div><span>X: </span><span></span></div>
+      <div><span>Y: </span><span></span></div>
     </div>
-    <div
-      id="two"
-      onclick="edit(1)"
-      class="physics block"
-      style="left: 0px; bottom: 0px"
-    >
-      <div>
-        <div><span>V<sub>x</sub>: </span><span></span></div>
-        <div><span>Y<sub>y</sub>: </span><span></span></div>
-        <div><span>X: </span><span></span></div>
-        <div><span>Y: </span><span></span></div>
-      </div>
-      <div>5kg</div>
+    <div>5kg</div>
+  </div>
+  <div id="three" onclick="edit(2)" class="physics block" style="left: 0px; bottom: 0px">
+    <div>
+      <div><span>V<sub>x</sub>: </span><span></span></div>
+      <div><span>Y<sub>y</sub>: </span><span></span></div>
+      <div><span>X: </span><span></span></div>
+      <div><span>Y: </span><span></span></div>
     </div>
-    <div
-      id="three"
-      onclick="edit(2)"
-      class="physics block"
-      style="left: 0px; bottom: 0px"
-    >
-      <div>
-        <div><span>V<sub>x</sub>: </span><span></span></div>
-        <div><span>Y<sub>y</sub>: </span><span></span></div>
-        <div><span>X: </span><span></span></div>
-        <div><span>Y: </span><span></span></div>
-      </div>
-      <div>5kg</div>
-    </div>
-    <div id="dots">
-    </div>
-    <div id="lines">
-    </div>
-  </body>
-  <script>
-    physicsObjects.push({
-      element: document.getElementById("one"),
-      x: 1000,
-      xSpd: 0,
-      y: 0,
-      ySpd: 0,
-      mass: 5,
-      force: 0,
-      angle: 0,
-      initial: (Math.pow(5, 2) + Math.pow(5, 2)) * 0.5 * 5,
-      time: 0,
-    });
-    physicsObjects.push({
-      element: document.getElementById("two"),
-      x: 100,
-      xSpd: 0,
-      y: 0,
-      ySpd: 0,
-      mass: 5,
-      force: 0,
-      angle: 0,
-      initial: (Math.pow(5, 2) + Math.pow(5, 2)) * 0.5 * 5,
-      time: 0,
-    });
-    physicsObjects.push({
-      element: document.getElementById("three"),
-      x: 150,
-      xSpd: 0,
-      y: 0,
-      ySpd: 0,
-      mass: 5,
-      force: 0,
-      angle: 0,
-      initial: (Math.pow(5, 2) + Math.pow(5, 2)) * 0.5 * 5,
-      time: 0,
-    });
-    loop();
-  </script>
+    <div>5kg</div>
+  </div>
+  <div id="dots">
+  </div>
+  <div id="lines">
+  </div>
+</body>
+<script>
+  physicsObjects.push({
+    element: document.getElementById("one"),
+    x: 1000,
+    xSpd: 0,
+    y: 0,
+    ySpd: 0,
+    mass: 5,
+    force: 0,
+    angle: 0,
+    time: 0,
+    radius: 31.051007172331,
+  });
+  physicsObjects.push({
+    element: document.getElementById("two"),
+    x: 100,
+    xSpd: 0,
+    y: 0,
+    ySpd: 0,
+    mass: 5,
+    force: 0,
+    angle: 0,
+    time: 0,
+    radius: 31.051007172331,
+  });
+  physicsObjects.push({
+    element: document.getElementById("three"),
+    x: 150,
+    xSpd: 0,
+    y: 0,
+    ySpd: 0,
+    mass: 5,
+    force: 0,
+    angle: 0,
+    time: 0,
+    radius: 31.051007172331,
+  });
+  let settingPanel = document.getElementById("setting");
+  loop();
+</script>
+
 </html>
