@@ -69,18 +69,6 @@ body{
     font-size: 2vw;
 }
 
-#blue{
-    background-color: blue;
-}
-
-#red{
-    background-color: red;
-}
-
-#green{
-    background-color: green;
-}
-
 #status{
     position: fixed;
     font-size: 3vh;

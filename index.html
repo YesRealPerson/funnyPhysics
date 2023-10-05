@@ -16,6 +16,8 @@
     <button id="pause" onclick="stop()">PAUSE</button>
     <button id="settings" onclick="settings()">SETTINGS</button>
     <button id="reset" onclick="reset()">RESET</button>
+    <button onclick="createObject()">CREATE BLOCK</button>
+    <button onclick="randomizeValues()">RANDOM</button>
   </div>
   <div id="status">RUNNING</div>
   <div id="notice">
@@ -62,8 +64,6 @@
     <input id="CM" type="checkbox" autocomplete="off" />
     CEILING
     <input id="CEILING" type="checkbox" autocomplete="off" />
-    INFINITE TRAILS (THIS WILL CAUSE SLOWDOWNS)
-    <input id="INFTRAILS" type="checkbox" autocomplete="off" />
     COEFFICIENT OF FRICTION
     <input id="COEFFICIENT" type="number" autocomplete="off" />
     GRAVITY
@@ -74,79 +74,15 @@
     <input id="ELASTICITY" type="number" autocomplete="off" /> -->
     <button onclick="settingSubmit()">SUBMIT</button>
   </div>
-
-  <div id="blue" onclick="edit(0)" class="physics block" style="left: 0px; bottom: 0px">
-    <div>
-      <div><span>V<sub>x</sub>: </span><span></span></div>
-      <div><span>Y<sub>y</sub>: </span><span></span></div>
-      <div><span>X: </span><span></span></div>
-      <div><span>Y: </span><span></span></div>
-    </div>
-    <div>5kg</div>
-  </div>
-  <div id="red" onclick="edit(1)" class="physics block" style="left: 0px; bottom: 0px">
-    <div>
-      <div><span>V<sub>x</sub>: </span><span></span></div>
-      <div><span>Y<sub>y</sub>: </span><span></span></div>
-      <div><span>X: </span><span></span></div>
-      <div><span>Y: </span><span></span></div>
-    </div>
-    <div>5kg</div>
-  </div>
-  <div id="green" onclick="edit(2)" class="physics block" style="left: 0px; bottom: 0px">
-    <div>
-      <div><span>V<sub>x</sub>: </span><span></span></div>
-      <div><span>Y<sub>y</sub>: </span><span></span></div>
-      <div><span>X: </span><span></span></div>
-      <div><span>Y: </span><span></span></div>
-    </div>
-    <div>5kg</div>
-  </div>
   <div id="dots">
   </div>
   <div id="lines">
   </div>
 </body>
 <script>
-  physicsObjects.push({
-    element: document.getElementById("blue"),
-    x: 1000,
-    xSpd: 0,
-    y: 0,
-    ySpd: 0,
-    mass: 5,
-    force: 0,
-    angle: 0,
-    time: 0,
-    radius: 50 / (1 + (50 * Math.pow(Math.E, (-0.15 * 5)))) + 29.02,
-    enabled: true
-  });
-  physicsObjects.push({
-    element: document.getElementById("red"),
-    x: 100,
-    xSpd: 0,
-    y: 0,
-    ySpd: 0,
-    mass: 5,
-    force: 0,
-    angle: 0,
-    time: 0,
-    radius: 50 / (1 + (50 * Math.pow(Math.E, (-0.15 * 5)))) + 29.02,
-    enabled: true
-  });
-  physicsObjects.push({
-    element: document.getElementById("green"),
-    x: 150,
-    xSpd: 0,
-    y: 0,
-    ySpd: 0,
-    mass: 5,
-    force: 0,
-    angle: 0,
-    time: 0,
-    radius: 50 / (1 + (50 * Math.pow(Math.E, (-0.15 * 5)))) + 29.02,
-    enabled: true
-  });
+  createObject();
+  createObject();
+  createObject();
   let settingPanel = document.getElementById("setting");
   loop();
 </script>
